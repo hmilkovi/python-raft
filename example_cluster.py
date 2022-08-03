@@ -23,16 +23,16 @@ while True:
         for i in range(10):
             uuid_str = str(uuid.uuid4())
             print(f"Write {i}:{uuid_str}")
-            raft.set(i, uuid_str)
+            raft.set(i, uuid_str, expire=2)
         print("--- %s seconds ---" % (time.time() - start_time))
-        time.sleep(1)
+        time.sleep(10)
         print("start insert 10 key values batch")
         start_time = time.time()
         data = {}
         for i in range(10):
             data[i] = str(uuid.uuid4())
             print(f"Prepare for batch {i}:{data[i]}")
-        raft.set_many(data, expire=4)
+        raft.set_many(data)
         print("--- %s seconds ---" % (time.time() - start_time))
         time.sleep(20)
     else:
