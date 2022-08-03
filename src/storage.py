@@ -39,17 +39,21 @@ class KvDriver(object):
 		with self.__lock:
 			self._deserialize_lock.acquire(blocking=False)
 			self.__conn.close()
-			with zipfile.ZipFile(fileName, 'r') as archiveFile:
-				raftData = pickle.loads(archiveFile.read("raft.bin"))
-				with open(f"{self._db_path}/cache.db", 'wb') as dst_file:
-					with archiveFile.open('kv.bin', 'r') as src_file:
-						while True:
-							data = src_file.read(2 ** 21)
-							if not data:
-								break
-							dst_file.write(data)
+			try:
+				with zipfile.ZipFile(fileName, 'r') as archiveFile:
+					raftData = pickle.loads(archiveFile.read("raft.bin"))
+					with open(f"{self._db_path}/cache.db", 'wb') as dst_file:
+						with archiveFile.open('kv.bin', 'r') as src_file:
+							while True:
+								data = src_file.read(2 ** 21)
+								if not data:
+									break
+								dst_file.write(data)
+					return raftData
+			except:
+				raise
+			finally:
 				self._deserialize_lock.release()
-				return raftData
 
 	def set(self, key, value, expire: float = None):
 		while (not self._serialize_lock.locked and not self._deserialize_lock):
