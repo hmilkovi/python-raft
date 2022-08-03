@@ -1,0 +1,2 @@
+pysyncobj==0.3.11
+diskcache==5.4.0
