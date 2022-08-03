@@ -58,17 +58,17 @@ class KvDriver(object):
 
 	def set_many(self, mapping, expire: float = None):
 		while (not self._serialize_lock.locked and not self._deserialize_lock):
-			time.sleep(self._wait_serialization_seconds )
+			time.sleep(self._wait_serialization_seconds)
 		with self.__conn.transact():
 			for key, value in mapping.items():
 				self.__conn.set(key, value, expire)
 
 	def get(self, key):
 		while (not self._deserialize_lock):
-			time.sleep(self._wait_serialization_seconds )
+			time.sleep(self._wait_serialization_seconds)
 		return self.__conn.get(key)
 
 	def delete(self, key):
 		while (not self._serialize_lock.locked and not self._deserialize_lock):
-			time.sleep(self._wait_serialization_seconds )
+			time.sleep(self._wait_serialization_seconds)
 		del self.__conn[key]
