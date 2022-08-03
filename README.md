@@ -1,5 +1,22 @@
-# python-raft
-This lib uses https://github.com/bakwc/PySyncObj for Raft kv with lock features to be used in Python (please star it if you star this project)
+# Python-Raft
+This is built so it can be used directly in code so we can avoid adding Redis, Etcd or smililar to the stack.
+
+Main features:
+- KV based on diskcache python lib that is replicated via Raft supports set, get, set_many, delete and expire of keys
+- Disributed lock via built in lock inside PySyncObj
+- Resistance on disk via diskcache and also presistant Raft
+
+Use cases:
+- Distributed web application server side sessions
+- Distributed locking
+- Distributed processing of data
+- Distributed cache
+
+
+# Built on top
+This lib si built on top:
+- https://github.com/bakwc/PySyncObj
+- https://github.com/grantjenks/python-diskcache
 
 # Run example cluster
 ```
