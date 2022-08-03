@@ -47,19 +47,21 @@ class RaftKv(SyncObj):
             if not self.isNodeConnected(node):
                 return False
         return True
+    
+    def status(self):
+        return self.getStatus()
 
     @replicated
-    def set(self, key, value):
+    def set(self, key, value, expire: float = None):
         try:
-            self.__driver.set(key, value)
-            return (True, None)
+            return (self.__driver.set(key, value, expire), None)
         except Exception as e:
             return (False, str(e))
 
     @replicated
-    def set_many(self, mapping):
+    def set_many(self, mapping, expire: float = None):
         try:
-            self.__driver.set_many(mapping)
+            self.__driver.set_many(mapping, expire)
             return (True, None)
         except Exception as e:
             return (False, str(e))
